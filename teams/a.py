@@ -16,7 +16,6 @@ def deploy(arena_data: dict):
     """
     DON'T TEMPER DEPLOY FUNCTION
     """
-    deploy_list.list_ = []
     logic(arena_data)
     return deploy_list.list_, team_signal
 
