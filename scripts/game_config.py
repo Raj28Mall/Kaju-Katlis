@@ -13,7 +13,7 @@ MEDIUM_SPEED = 3
 FAST_SPEED = 5
 TOP_SPEED = 6
 
-FPS = 90
+FPS = 60
 
 FULL_WIDTH = info.current_w
 EXTRA_HEIGHT  = info.current_h

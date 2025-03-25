@@ -13,53 +13,40 @@ def random_x(min_val=-25, max_val=25):
     return random.randint(min_val, max_val)
 
 def deploy(arena_data: dict):
-    """
-    Custom deploy function that prioritizes a ground push with Valkyrie.
-    It dynamically updates `team_signal` to reflect detected enemy troops 
-    (without breaking formatting).
-    
-    Returns:
-        deploy_list (list): A list of tuples (troop, (x, y) deploy position).
-        team_signal (str): Updated team signal.
-    """
     logic(arena_data)
     return deploy_list.list_, team_signal
 
-def choose_troop(enemy_tanks, enemy_dps, enemy_swarm):
+def choose_troop(enemy_tanks, enemy_dps, enemy_swarm, deployable):
     """Decide the best troop to deploy based on enemy composition."""
-    TANK=["giant","valkyrie", "prince", "knight"]
-    DPS=["musketeer","wizard","balloon", "archer"]
-    SWARM=["skeleton","minion","barbaraian", "dragon"]
+    TANK=["Giant","Valkyrie", "Prince", "Knight"]
+    DPS=["Musketeer","Wizard","Balloon", "Archer"]
+    SWARM=["Skeleton","Minion","Barbaraian", "Dragon"]
     if enemy_tanks > enemy_dps and enemy_tanks > enemy_swarm:
-        return select_best(DPS)
+        return select_best(DPS, deployable)
     elif enemy_dps > enemy_swarm:
-        return select_best(SWARM)  
+        return select_best(SWARM, deployable)  
     else:
-        return select_best(TANK)
+        return select_best(TANK, deployable)
     
-def select_best(category):
+def select_best(category, deployable):
     # Actually we would have weight based system for troop selection in this
-    TANK=["giant","valkyrie", "prince", "knight"]
-    DPS=["musketeer","wizard","balloon", "archer"]
-    SWARM=["skeleton","minion","barbaraian", "dragon"]
-    if category == "TANK":
-        return category[0]
-    elif category == "DPS":
-        return category[0]
-    else:
-        return category[0]
+    TANK=["Giant","Valkyrie", "Prince", "Knight"]
+    DPS=["Musketeer","Wizard","Balloon", "Archer"]
+    SWARM=["Skeleton","Minion","Barbaraian", "Dragon"]
+    for i in range(0,4):
+        if category[i] in deployable:
+            return category[i]
     
 
 def logic(arena_data: dict):
     global team_signal
     my_tower = arena_data["MyTower"]
     opp_troops = arena_data["OppTroops"]
+    TANK=["Giant","Valkyrie", "Prince", "Knight"]
+    DPS=["Musketeer","Wizard","Balloon", "Archer"]
+    SWARM=["Skeleton","Minion","Barbaraian", "Dragon"]
 
-    TANK=["giant","valkyrie", "prince", "knight"]
-    DPS=["musketeer","wizard","balloon", "archer"]
-    SWARM=["skeleton","minion","barbaraian", "dragon"]
-
-    tokens = [token.strip().lower() for token in team_signal.split(",") if token.strip() != "h"]
+    tokens = [token.strip().title() for token in team_signal.split(",") if token.strip() != "h"]
     
     for troop in opp_troops:
         if troop.name.lower() not in tokens:
@@ -79,5 +66,5 @@ def logic(arena_data: dict):
 
     team_signal = ", ".join(["h"] + [name for name in current_names if name != "h"])
 
-    troop_to_deploy = choose_troop(enemy_tanks, enemy_dps, enemy_swarm)
+    troop_to_deploy = choose_troop(enemy_tanks, enemy_dps, enemy_swarm, my_tower.deployable_troops)
     deploy_list.list_.append((troop_to_deploy, (random_x(-10, 10), 0)))

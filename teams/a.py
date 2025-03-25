@@ -1,7 +1,7 @@
 import random
 from teams.helper_function import Troops, Utils
 
-team_name = "Pratyaksh"
+team_name = "Enemy"
 troops = [
     Troops.wizard, Troops.minion, Troops.archer, Troops.musketeer,
     Troops.dragon, Troops.skeleton, Troops.valkyrie, Troops.barbarian
